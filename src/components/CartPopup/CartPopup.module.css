@@ -1,0 +1,13 @@
+.emptyCart {
+  padding: 20px;
+  text-align: center;
+}
+
+.cartContainer {
+  width: 300px;
+}
+
+.quantityDisplay {
+  min-width: 30px;
+  text-align: center;
+}

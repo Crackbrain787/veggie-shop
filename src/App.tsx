@@ -1,17 +1,41 @@
-import { AppShell } from '@mantine/core';
+import { useState, useEffect } from 'react';
+import { AppShell, Container, Loader, Notification } from '@mantine/core';
+import { IconX } from '@tabler/icons-react';
 import { useCart } from './hooks/useCart';
 import { Header } from './components/Header/Header';
+import { ProductList } from './components/ProductList/ProductList';
+import type { Product } from './types';
+import styles from './App.module.css'; // ← ДОБАВЛЯЕМ ИМПОРТ СТИЛЕЙ
 
 function App() {
-  const { cart, addToCart, updateQuantity, removeFromCart } = useCart();
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const { cart, addToCart, updateQuantity, removeFromCart, clearCart } = useCart();
 
-  const testProduct = {
-    id: 1,
-    name: "Морковь",
-    price: 50,
-    image: "https://via.placeholder.com/150",
-    category: "Овощи"
-  };
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(
+          'https://res.cloudinary.com/sivadass/raw/upload/v1535817394/json/products.json'
+        );
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch products');
+        }
+        
+        const data = await response.json();
+        setProducts(data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Something went wrong');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   return (
     <AppShell
@@ -23,40 +47,34 @@ function App() {
           cart={cart}
           onCartItemUpdate={updateQuantity}
           onCartItemRemove={removeFromCart}
+          onClearCart={clearCart}
         />
       </AppShell.Header>
 
       <AppShell.Main pt={80}>
-        <div style={{ padding: "20px" }}>
-          <h1>🥦 Магазин овощей - ТЕСТ Mantine v7</h1>
-          
-          <div style={{ marginBottom: "20px" }}>
-            <button 
-              onClick={() => addToCart(testProduct, 1)}
-              style={{ 
-                padding: "10px 20px", 
-                fontSize: "16px",
-                backgroundColor: "#4CAF50",
-                color: "white",
-                border: "none",
-                borderRadius: "5px",
-                cursor: "pointer"
-              }}
+        <Container size="xl">
+          {error && (
+            <Notification 
+              icon={<IconX size="1.1rem" />} 
+              color="red" 
+              onClose={() => setError(null)}
+              mb="md"
             >
-              Добавить морковь в корзину
-            </button>
-          </div>
-
-          <div style={{ 
-            padding: "10px", 
-            backgroundColor: "#d4edda", 
-            border: "1px solid #c3e6cb",
-            borderRadius: "5px",
-            color: "#155724"
-          }}>
-            ✅ Mantine v7 работает! Header с корзиной должен функционировать.
-          </div>
-        </div>
+              {error}
+            </Notification>
+          )}
+          
+          {loading ? (
+            <div className={styles.loaderContainer}> {/* ← ИСПОЛЬЗУЕМ CSS КЛАСС */}
+              <Loader size="xl" />
+            </div>
+          ) : (
+            <ProductList 
+              products={products} 
+              onAddToCart={addToCart}
+            />
+          )}
+        </Container>
       </AppShell.Main>
     </AppShell>
   );

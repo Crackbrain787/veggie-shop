@@ -1,24 +1,26 @@
 import { Group, Text, Button, ActionIcon, Stack, Divider, Image } from '@mantine/core';
 import { IconPlus, IconMinus, IconTrash } from '@tabler/icons-react';
 import type { CartState } from '../../types';
+import styles from './CartPopup.module.css'; // ← ДОБАВЛЯЕМ ИМПОРТ СТИЛЕЙ
 
 interface CartPopupProps {
   cart: CartState;
   onUpdateQuantity: (productId: number, quantity: number) => void;
   onRemoveItem: (productId: number) => void;
+  onClearCart: () => void;
 }
 
-export function CartPopup({ cart, onUpdateQuantity, onRemoveItem }: CartPopupProps) {
+export function CartPopup({ cart, onUpdateQuantity, onRemoveItem, onClearCart }: CartPopupProps) {
   if (cart.items.length === 0) {
     return (
-      <Text size="sm" c="dimmed" style={{ padding: '20px', textAlign: 'center' }}>
+      <Text size="sm" c="dimmed" className={styles.emptyCart}> {/* ← ИСПОЛЬЗУЕМ CSS КЛАСС */}
         Корзина пуста
       </Text>
     );
   }
 
   return (
-    <Stack gap="md" style={{ width: 300 }}>
+    <Stack gap="md" className={styles.cartContainer}> {/* ← ИСПОЛЬЗУЕМ CSS КЛАСС */}
       <Text fw={500} size="lg">Корзина</Text>
       
       {cart.items.map((item) => (
@@ -56,7 +58,7 @@ export function CartPopup({ cart, onUpdateQuantity, onRemoveItem }: CartPopupPro
               <IconMinus size={12} />
             </ActionIcon>
             
-            <Text size="sm" style={{ minWidth: '30px', textAlign: 'center' }}>
+            <Text size="sm" className={styles.quantityDisplay}> {/* ← ИСПОЛЬЗУЕМ CSS КЛАСС */}
               {item.quantity}
             </Text>
             
@@ -89,9 +91,14 @@ export function CartPopup({ cart, onUpdateQuantity, onRemoveItem }: CartPopupPro
         </Text>
       </Group>
       
-  <Button color="green" fullWidth>
-  Оформить заказ
-</Button>
+      <Group grow>
+        <Button color="green">
+          Оформить заказ
+        </Button>
+        <Button variant="outline" color="red" onClick={onClearCart}>
+          Очистить корзину
+        </Button>
+      </Group>
     </Stack>
   );
 }
