@@ -1,7 +1,7 @@
-import { SimpleGrid } from '@mantine/core';
+import { Text } from '@mantine/core';
 import type { Product } from '../../types';
 import { ProductCard } from '../ProductCard/ProductCard';
-
+import styles from './ProductList.module.css';
 
 interface ProductListProps {
   products: Product[];
@@ -10,14 +10,17 @@ interface ProductListProps {
 
 export function ProductList({ products, onAddToCart }: ProductListProps) {
   return (
-    <SimpleGrid cols={{ base: 1, sm: 2, md: 3, lg: 4 }} spacing="lg">
-      {products.map((product) => (
-        <ProductCard 
-          key={product.id} 
-          product={product} 
-          onAddToCart={onAddToCart}
-        />
-      ))}
-    </SimpleGrid>
+    <div className={styles.productListContainer}>
+      <Text className={styles.catalogTitle}>Catalog</Text>
+      <div className={styles.productsGrid}>
+        {products.map((product) => (
+          <ProductCard 
+            key={product.id} 
+            product={product} 
+            onAddToCart={onAddToCart}
+          />
+        ))}
+      </div>
+    </div>
   );
 }

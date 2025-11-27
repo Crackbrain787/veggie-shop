@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
-import { AppShell, Container, Loader, Notification } from '@mantine/core';
+import { Loader, Notification } from '@mantine/core';
 import { IconX } from '@tabler/icons-react';
 import { useCart } from './hooks/useCart';
 import { Header } from './components/Header/Header';
 import { ProductList } from './components/ProductList/ProductList';
 import type { Product } from './types';
-import styles from './App.module.css'; // ← ДОБАВЛЯЕМ ИМПОРТ СТИЛЕЙ
+import styles from './App.module.css';
 
 function App() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -38,45 +38,40 @@ function App() {
   }, []);
 
   return (
-    <AppShell
-      header={{ height: 80 }}
-      padding="md"
-    >
-      <AppShell.Header>
-        <Header 
-          cart={cart}
-          onCartItemUpdate={updateQuantity}
-          onCartItemRemove={removeFromCart}
-          onClearCart={clearCart}
-        />
-      </AppShell.Header>
+    <div>
+      {/* Фиксированный Header */}
+      <Header 
+        cart={cart}
+        onCartItemUpdate={updateQuantity}
+        onCartItemRemove={removeFromCart}
+        onClearCart={clearCart}
+      />
 
-      <AppShell.Main pt={80}>
-        <Container size="xl">
-          {error && (
-            <Notification 
-              icon={<IconX size="1.1rem" />} 
-              color="red" 
-              onClose={() => setError(null)}
-              mb="md"
-            >
-              {error}
-            </Notification>
-          )}
-          
-          {loading ? (
-            <div className={styles.loaderContainer}> {/* ← ИСПОЛЬЗУЕМ CSS КЛАСС */}
-              <Loader size="xl" />
-            </div>
-          ) : (
-            <ProductList 
-              products={products} 
-              onAddToCart={addToCart}
-            />
-          )}
-        </Container>
-      </AppShell.Main>
-    </AppShell>
+      {/* Основной контент с отступом для фиксированного Header */}
+      <div style={{ marginTop: '59px', minHeight: 'calc(100vh - 59px)' }}>
+        {error && (
+          <Notification 
+            icon={<IconX size="1.1rem" />} 
+            color="red" 
+            onClose={() => setError(null)}
+            style={{ margin: '20px auto', maxWidth: '1440px', width: 'calc(100% - 40px)' }}
+          >
+            {error}
+          </Notification>
+        )}
+        
+        {loading ? (
+          <div className={styles.loaderContainer}>
+            <Loader size="xl" />
+          </div>
+        ) : (
+          <ProductList 
+            products={products} 
+            onAddToCart={addToCart}
+          />
+        )}
+      </div>
+    </div>
   );
 }
 

@@ -1,0 +1,20 @@
+.productListContainer {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.catalogTitle {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--text-black);
+  margin: 50px 0 40px 0;
+}
+
+.productsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 302px);
+  gap: 16px;
+  justify-content: center;
+  width: 100%;
+}

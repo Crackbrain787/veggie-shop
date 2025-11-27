@@ -51,14 +51,15 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
       onMouseLeave={() => setIsHovered(false)}
       className={styles.productCard} // ← ИСПОЛЬЗУЕМ CSS КЛАСС
     >
-      <Card.Section>
-        <Image
-          src={product.image}
-          height={160}
-          alt={product.name}
-          fit="cover"
-        />
-      </Card.Section>
+      <Card.Section className={styles.imageSection}>
+  <Image
+    src={product.image}
+    height={160}
+    alt={product.name}
+    fit="cover"
+    style={{ width: '100%', height: '160px' }}
+  />
+</Card.Section>
 
       <Group justify="space-between" mt="md" mb="xs">
         <Text fw={500} size="lg">{product.name}</Text>
