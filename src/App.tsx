@@ -39,7 +39,7 @@ function App() {
   return (
     <AppShell
       header={{ height: 59 }}
-      padding="md"
+      // Убираем padding="md" чтобы не было отступов по бокам
     >
       <AppShell.Header>
         <Header 
@@ -50,7 +50,13 @@ function App() {
         />
       </AppShell.Header>
 
-      <AppShell.Main style={{ marginTop: 59 }}>
+      {/* Устанавливаем фон для всего основного контента */}
+      <AppShell.Main style={{ 
+        marginTop: 59,
+        minHeight: 'calc(100vh - 59px)',
+        backgroundColor: '#F7F7F7', // Фон для всего main
+        padding: 0, // Убираем отступы
+      }}>
         {error && (
           <Notification 
             icon={<IconX size="1.1rem" />} 

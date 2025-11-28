@@ -3,11 +3,10 @@ import {
   Card, 
   Image, 
   Text, 
-  Button, 
-  ActionIcon, 
-  NumberInput,
+  Button,
+  Box
 } from '@mantine/core';
-import { IconPlus, IconMinus } from '@tabler/icons-react';
+import { IconShoppingCart } from '@tabler/icons-react';
 import type { Product } from '../../types';
 
 interface ProductCardProps {
@@ -30,8 +29,8 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
     setQuantity(1);
   };
 
-  const handleQuantityChange = (value: string | number) => {
-    const numValue = Number(value);
+  const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const numValue = Number(e.target.value);
     if (numValue >= 1 && numValue <= 99) {
       setQuantity(numValue);
     }
@@ -39,146 +38,225 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
 
   return (
     <Card 
-  shadow="sm" 
-  padding="lg" 
-  radius="md" 
-  withBorder 
-  w={302} 
-  h={414}
-  style={{ 
-    display: 'flex', 
-    flexDirection: 'column',
-    padding: 16 // Точный padding как в макете
-  }}
->
-  {/* Изображение */}
-  <Card.Section 
-    style={{ 
-      width: 276, 
-      height: 276, 
-      margin: '0 auto 16px auto' // Центрируем и добавляем отступ
-    }}
-  >
-    <Image
-      src={product.image}
-      width={276}
-      height={276}
-      alt={product.name}
-      fit="cover"
-    />
-  </Card.Section>
-
-  {/* Контент карточки */}
-  <div style={{ 
-    width: 270, 
-    margin: '0 auto', // Центрируем контент внутри карточки
-    display: 'flex',
-    flexDirection: 'column',
-    flex: 1
-  }}>
-    {/* Первая строка */}
-    <div style={{
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      height: 30,
-      marginBottom: 12
-    }}>
-      <Text 
-        fw={500} 
-        size="sm" 
-        style={{ 
-          flex: 1,
-          whiteSpace: 'nowrap',
+      padding={16}
+      radius={24}
+      withBorder 
+      w={302}
+      h={414}
+      style={{ 
+        display: 'flex', 
+        flexDirection: 'column',
+        backgroundColor: 'white',
+        borderRadius: '24px',
+        overflow: 'hidden',
+      }}
+    >
+      {/* Изображение товара - точные размеры 276x276 */}
+      <Box
+        style={{
+          width: 276,
+          height: 276,
+          borderRadius: '16px',
           overflow: 'hidden',
-          textOverflow: 'ellipsis'
+          margin: '0 auto',
+          marginBottom: 16,
         }}
       >
-        {product.name}
-      </Text>
-      
-      {/* Кнопки количества */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 4,
-        width: 90,
-        height: 30
-      }}>
-        <ActionIcon 
-          variant="outline" 
-          size="sm"
-          onClick={handleDecrement}
-          disabled={quantity <= 1}
-          w={24}
-          h={24}
-        >
-          <IconMinus size={14} />
-        </ActionIcon>
-        
-        <NumberInput
-          value={quantity}
-          onChange={handleQuantityChange}
-          min={1}
-          max={99}
-          hideControls
-          styles={{ 
-            input: { 
-              width: 40, 
-              height: 24,
-              minHeight: 24,
-              textAlign: 'center',
-              padding: '0 5px',
-              fontSize: 12,
-              fontWeight: 500
-            } 
-          }}
+        <Image
+          src={product.image}
+          width={276}
+          height={276}
+          alt={product.name}
+          fit="cover"
         />
-        
-        <ActionIcon 
-          variant="outline" 
-          size="sm"
-          onClick={handleIncrement}
-          w={24}
-          h={24}
-        >
-          <IconPlus size={14} />
-        </ActionIcon>
-      </div>
-    </div>
+      </Box>
 
-    {/* Вторая строка */}
-    <div style={{
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      height: 44,
-      marginTop: 'auto'
-    }}>
-      <Text fw={600} size="lg" style={{ width: 54 }}>
-        {product.price} руб.
-      </Text>
-      <Button 
-        styles={{
-          root: {
-            backgroundColor: '#E7FAEB',
-            color: 'black',
-            borderRadius: 8,
-            width: 204,
-            height: 44,
-            fontWeight: 500,
-            fontSize: 14,
-            '&:hover': {
-              backgroundColor: '#d4f5db'
-            }
-          }
+      {/* Контент карточки с правильными отступами */}
+      <Box
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          flex: 1,
+          justifyContent: 'space-between',
+          paddingBottom: 8, // Добавляем отступ снизу
         }}
-        onClick={handleAddToCart}
       >
-        Добавить в корзину
-      </Button>
-    </div>
-  </div>
-</Card>
+        {/* Первая строка: название товара и кнопки количества */}
+        <Box
+          style={{
+            width: 270,
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+            margin: '0 auto',
+            gap: 8,
+            marginBottom: 12,
+          }}
+        >
+          {/* Название товара */}
+          <Text
+            style={{
+              flex: 1,
+              fontFamily: 'Inter, sans-serif',
+              fontWeight: 500,
+              fontSize: 14,
+              lineHeight: '20px',
+              whiteSpace: 'normal',
+              overflow: 'visible',
+              wordBreak: 'break-word',
+            }}
+          >
+            {product.name}
+          </Text>
+
+          {/* Кнопки количества */}
+          <div
+            style={{
+              width: 90,
+              height: 30,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexShrink: 0,
+            }}
+          >
+            <button
+              onClick={handleDecrement}
+              disabled={quantity <= 1}
+              style={{ 
+                width: 20,
+                height: 20,
+                borderRadius: 4,
+                border: '1px solid #ccc',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: 12,
+                backgroundColor: 'white',
+                cursor: quantity <= 1 ? 'not-allowed' : 'pointer',
+                opacity: quantity <= 1 ? 0.5 : 1
+              }}
+            >
+              -
+            </button>
+            
+            <input
+              type="number"
+              value={quantity}
+              onChange={handleQuantityChange}
+              min={1}
+              max={99}
+              style={{ 
+                width: 30,
+                height: 20,
+                textAlign: 'center',
+                padding: 0,
+                fontSize: 10,
+                fontWeight: 500,
+                border: '1px solid #ccc',
+                borderRadius: 4
+              }}
+            />
+            
+            <button
+              onClick={handleIncrement}
+              style={{ 
+                width: 20,
+                height: 20,
+                borderRadius: 4,
+                border: '1px solid #ccc',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: 12,
+                backgroundColor: 'white',
+                cursor: 'pointer'
+              }}
+            >
+              +
+            </button>
+          </div>
+        </Box>
+
+        {/* Вторая строка: цена и кнопка добавления */}
+        <Box
+          style={{
+            width: 270,
+            height: 44,
+            display: 'flex',
+            gap: 12,
+            alignItems: 'center',
+            margin: '0 auto',
+            marginTop: 'auto', // Прижимаем к низу
+          }}
+        >
+          {/* Цена */}
+          <Text
+            style={{
+              width: 54,
+              height: 24,
+              fontFamily: 'Inter, sans-serif',
+              fontWeight: 600,
+              fontSize: 18,
+              lineHeight: '24px',
+              display: 'flex',
+              alignItems: 'center'
+            }}
+          >
+            {product.price} $
+          </Text>
+
+          {/* Кнопка "Add to cart" */}
+          <Button
+            style={{
+              width: 204,
+              height: 44,
+              padding: '10px 16px',
+              fontFamily: 'Inter, sans-serif',
+              fontWeight: 600,
+              fontSize: 16,
+              lineHeight: '24px',
+              letterSpacing: '0%',
+              borderRadius: 8,
+              backgroundColor: '#DBF2E0',
+              color: '#3B944E',
+              border: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              position: 'relative',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#54B46A';
+              e.currentTarget.style.color = 'white';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = '#DBF2E0';
+              e.currentTarget.style.color = '#3B944E';
+            }}
+            onMouseDown={(e) => {
+              e.currentTarget.style.backgroundColor = '#54B46A';
+              e.currentTarget.style.color = 'white';
+            }}
+            onMouseUp={(e) => {
+              e.currentTarget.style.backgroundColor = '#54B46A';
+              e.currentTarget.style.color = 'white';
+            }}
+            onClick={handleAddToCart}
+          >
+            <span>Add to cart</span>
+            <IconShoppingCart 
+              size={16} 
+              style={{ 
+                color: 'inherit',
+                position: 'absolute',
+                right: '30px',
+                top: '15px',
+              }} 
+            />
+          </Button>
+        </Box>
+      </Box>
+    </Card>
   );
 }
