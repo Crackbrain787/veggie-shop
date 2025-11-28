@@ -3,15 +3,12 @@ import {
   Card, 
   Image, 
   Text, 
-  Group, 
   Button, 
   ActionIcon, 
   NumberInput,
-  Badge
 } from '@mantine/core';
 import { IconPlus, IconMinus } from '@tabler/icons-react';
 import type { Product } from '../../types';
-import styles from './ProductCard.module.css'; // ← ДОБАВЛЯЕМ ИМПОРТ СТИЛЕЙ
 
 interface ProductCardProps {
   product: Product;
@@ -20,7 +17,6 @@ interface ProductCardProps {
 
 export function ProductCard({ product, onAddToCart }: ProductCardProps) {
   const [quantity, setQuantity] = useState(1);
-  const [isHovered, setIsHovered] = useState(false);
 
   const handleIncrement = () => setQuantity((q) => Math.min(99, q + 1));
   const handleDecrement = () => setQuantity((q) => Math.max(1, q - 1));
@@ -42,44 +38,82 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
   };
 
   return (
-    <Card
-      shadow={isHovered ? "md" : "sm"}
-      padding="lg"
-      radius="md"
-      withBorder
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      className={styles.productCard} // ← ИСПОЛЬЗУЕМ CSS КЛАСС
-    >
-      <Card.Section className={styles.imageSection}>
-  <Image
-    src={product.image}
-    height={160}
-    alt={product.name}
-    fit="cover"
-    style={{ width: '100%', height: '160px' }}
-  />
-</Card.Section>
+    <Card 
+  shadow="sm" 
+  padding="lg" 
+  radius="md" 
+  withBorder 
+  w={302} 
+  h={414}
+  style={{ 
+    display: 'flex', 
+    flexDirection: 'column',
+    padding: 16 // Точный padding как в макете
+  }}
+>
+  {/* Изображение */}
+  <Card.Section 
+    style={{ 
+      width: 276, 
+      height: 276, 
+      margin: '0 auto 16px auto' // Центрируем и добавляем отступ
+    }}
+  >
+    <Image
+      src={product.image}
+      width={276}
+      height={276}
+      alt={product.name}
+      fit="cover"
+    />
+  </Card.Section>
 
-      <Group justify="space-between" mt="md" mb="xs">
-        <Text fw={500} size="lg">{product.name}</Text>
-        <Badge color="green" variant="light">
-          {product.category}
-        </Badge>
-      </Group>
-
-      <Text size="xl" fw={700} c="green" mb="md">
-        {product.price} руб.
+  {/* Контент карточки */}
+  <div style={{ 
+    width: 270, 
+    margin: '0 auto', // Центрируем контент внутри карточки
+    display: 'flex',
+    flexDirection: 'column',
+    flex: 1
+  }}>
+    {/* Первая строка */}
+    <div style={{
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      height: 30,
+      marginBottom: 12
+    }}>
+      <Text 
+        fw={500} 
+        size="sm" 
+        style={{ 
+          flex: 1,
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis'
+        }}
+      >
+        {product.name}
       </Text>
-
-      <Group gap="xs" mb="md">
+      
+      {/* Кнопки количества */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 4,
+        width: 90,
+        height: 30
+      }}>
         <ActionIcon 
           variant="outline" 
-          size="lg" 
+          size="sm"
           onClick={handleDecrement}
           disabled={quantity <= 1}
+          w={24}
+          h={24}
         >
-          <IconMinus size={16} />
+          <IconMinus size={14} />
         </ActionIcon>
         
         <NumberInput
@@ -87,23 +121,64 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
           onChange={handleQuantityChange}
           min={1}
           max={99}
-          styles={{ input: { width: 60, textAlign: 'center' } }}
+          hideControls
+          styles={{ 
+            input: { 
+              width: 40, 
+              height: 24,
+              minHeight: 24,
+              textAlign: 'center',
+              padding: '0 5px',
+              fontSize: 12,
+              fontWeight: 500
+            } 
+          }}
         />
         
-        <ActionIcon variant="outline" size="lg" onClick={handleIncrement}>
-          <IconPlus size={16} />
+        <ActionIcon 
+          variant="outline" 
+          size="sm"
+          onClick={handleIncrement}
+          w={24}
+          h={24}
+        >
+          <IconPlus size={14} />
         </ActionIcon>
-      </Group>
+      </div>
+    </div>
 
+    {/* Вторая строка */}
+    <div style={{
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      height: 44,
+      marginTop: 'auto'
+    }}>
+      <Text fw={600} size="lg" style={{ width: 54 }}>
+        {product.price} руб.
+      </Text>
       <Button 
-        variant="filled" 
-        color="green" 
-        fullWidth 
-        radius="md"
+        styles={{
+          root: {
+            backgroundColor: '#E7FAEB',
+            color: 'black',
+            borderRadius: 8,
+            width: 204,
+            height: 44,
+            fontWeight: 500,
+            fontSize: 14,
+            '&:hover': {
+              backgroundColor: '#d4f5db'
+            }
+          }
+        }}
         onClick={handleAddToCart}
       >
         Добавить в корзину
       </Button>
-    </Card>
+    </div>
+  </div>
+</Card>
   );
 }

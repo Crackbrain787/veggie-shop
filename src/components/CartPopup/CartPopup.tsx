@@ -1,26 +1,36 @@
 import { Group, Text, Button, ActionIcon, Stack, Divider, Image } from '@mantine/core';
 import { IconPlus, IconMinus, IconTrash } from '@tabler/icons-react';
 import type { CartState } from '../../types';
-import styles from './CartPopup.module.css'; // ← ДОБАВЛЯЕМ ИМПОРТ СТИЛЕЙ
 
 interface CartPopupProps {
   cart: CartState;
   onUpdateQuantity: (productId: number, quantity: number) => void;
   onRemoveItem: (productId: number) => void;
   onClearCart: () => void;
+  onCheckout?: () => void;
 }
 
-export function CartPopup({ cart, onUpdateQuantity, onRemoveItem, onClearCart }: CartPopupProps) {
+export function CartPopup({ cart, onUpdateQuantity, onRemoveItem, onClearCart, onCheckout }: CartPopupProps) {
+  const handleCheckout = () => {
+    if (onCheckout) {
+      onCheckout();
+    } else {
+      // Базовая реализация
+      alert('Заказ оформлен! Сумма: ' + cart.totalPrice.toFixed(2) + ' руб.');
+      onClearCart();
+    }
+  };
+
   if (cart.items.length === 0) {
     return (
-      <Text size="sm" c="dimmed" className={styles.emptyCart}> {/* ← ИСПОЛЬЗУЕМ CSS КЛАСС */}
+      <Text size="sm" c="dimmed" ta="center" py={20}>
         Корзина пуста
       </Text>
     );
   }
 
   return (
-    <Stack gap="md" className={styles.cartContainer}> {/* ← ИСПОЛЬЗУЕМ CSS КЛАСС */}
+    <Stack gap="md" w={300} p={0}>
       <Text fw={500} size="lg">Корзина</Text>
       
       {cart.items.map((item) => (
@@ -34,7 +44,7 @@ export function CartPopup({ cart, onUpdateQuantity, onRemoveItem, onClearCart }:
                 radius="sm"
                 alt={item.product.name}
               />
-              <div>
+              <div style={{ flex: 1, minWidth: 0 }}>
                 <Text size="sm" fw={500} lineClamp={1}>
                   {item.product.name}
                 </Text>
@@ -58,7 +68,7 @@ export function CartPopup({ cart, onUpdateQuantity, onRemoveItem, onClearCart }:
               <IconMinus size={12} />
             </ActionIcon>
             
-            <Text size="sm" className={styles.quantityDisplay}> {/* ← ИСПОЛЬЗУЕМ CSS КЛАСС */}
+            <Text size="sm" w={30} ta="center">
               {item.quantity}
             </Text>
             
@@ -92,7 +102,7 @@ export function CartPopup({ cart, onUpdateQuantity, onRemoveItem, onClearCart }:
       </Group>
       
       <Group grow>
-        <Button color="green">
+        <Button color="green" onClick={handleCheckout}>
           Оформить заказ
         </Button>
         <Button variant="outline" color="red" onClick={onClearCart}>
