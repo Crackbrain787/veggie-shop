@@ -11,7 +11,7 @@ interface HeaderProps {
   onClearCart: () => void;
 }
 
-export function Header({ cart, onCartItemUpdate, onCartItemRemove, onClearCart }: HeaderProps) {
+export function Header({ cart, onCartItemUpdate }: HeaderProps) {
   const [cartOpened, setCartOpened] = useState(false);
 
   return (
@@ -188,34 +188,27 @@ export function Header({ cart, onCartItemUpdate, onCartItemRemove, onClearCart }
 
           {/* Popup корзины */}
           {cartOpened && (
-            <Box
-              style={{
-                position: 'absolute',
-                top: '100%',
-                right: 0,
-                backgroundColor: 'var(--card-bg)',
-                border: '1px solid var(--gray-light)',
-                padding: 20,
-                zIndex: 1001,
-                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
-                borderRadius: 'var(--border-radius-lg)',
-                minWidth: 350,
-                marginTop: 8,
-              }}
-            >
-              <CartPopup
-                cart={cart}
-                onUpdateQuantity={onCartItemUpdate}
-                onRemoveItem={onCartItemRemove}
-                onClearCart={onClearCart}
-                onCheckout={() => {
-                  alert(`Заказ на ${cart.totalPrice.toFixed(2)} руб. оформлен!`);
-                  onClearCart();
-                  setCartOpened(false);
-                }}
-              />
-            </Box>
-          )}
+  <Box
+    style={{
+      position: 'absolute',
+      top: '100%',
+      right: 0,
+      backgroundColor: 'var(--card-bg)',
+      border: '1px solid var(--gray-light)',
+      padding: 20,
+      zIndex: 1001,
+      boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+      borderRadius: 'var(--border-radius-lg)',
+      minWidth: 350,
+      marginTop: 8,
+    }}
+  >
+    <CartPopup
+      cart={cart}
+      onUpdateQuantity={onCartItemUpdate}
+    />
+  </Box>
+)}
         </Box>
       </Box>
     </Box>

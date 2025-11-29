@@ -4,10 +4,13 @@ import {
   Image, 
   Text, 
   Button,
-  Box
+  Box,
+  ActionIcon,
+  NumberInput
 } from '@mantine/core';
-import { IconShoppingCart } from '@tabler/icons-react';
+import { IconShoppingCart, IconPlus, IconMinus } from '@tabler/icons-react';
 import type { Product } from '../../types';
+
 
 interface ProductCardProps {
   product: Product;
@@ -29,8 +32,8 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
     setQuantity(1);
   };
 
-  const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const numValue = Number(e.target.value);
+  const handleQuantityChange = (value: string | number) => {
+    const numValue = Number(value);
     if (numValue >= 1 && numValue <= 99) {
       setQuantity(numValue);
     }
@@ -51,7 +54,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
         overflow: 'hidden',
       }}
     >
-      {/* Изображение товара - точные размеры 276x276 */}
+      {/* Изображение товара */}
       <Box
         style={{
           width: 276,
@@ -78,7 +81,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
           flexDirection: 'column',
           flex: 1,
           justifyContent: 'space-between',
-          paddingBottom: 8, // Добавляем отступ снизу
+          paddingBottom: 8,
         }}
       >
         {/* Первая строка: название товара и кнопки количества */}
@@ -109,73 +112,83 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
             {product.name}
           </Text>
 
-          {/* Кнопки количества */}
-          <div
-            style={{
-              width: 90,
-              height: 30,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              flexShrink: 0,
-            }}
-          >
-            <button
-              onClick={handleDecrement}
-              disabled={quantity <= 1}
-              style={{ 
-                width: 20,
-                height: 20,
-                borderRadius: 4,
-                border: '1px solid #ccc',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: 12,
-                backgroundColor: 'white',
-                cursor: quantity <= 1 ? 'not-allowed' : 'pointer',
-                opacity: quantity <= 1 ? 0.5 : 1
-              }}
-            >
-              -
-            </button>
-            
-            <input
-              type="number"
-              value={quantity}
-              onChange={handleQuantityChange}
-              min={1}
-              max={99}
-              style={{ 
-                width: 30,
-                height: 20,
-                textAlign: 'center',
-                padding: 0,
-                fontSize: 10,
-                fontWeight: 500,
-                border: '1px solid #ccc',
-                borderRadius: 4
-              }}
-            />
-            
-            <button
-              onClick={handleIncrement}
-              style={{ 
-                width: 20,
-                height: 20,
-                borderRadius: 4,
-                border: '1px solid #ccc',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: 12,
-                backgroundColor: 'white',
-                cursor: 'pointer'
-              }}
-            >
-              +
-            </button>
-          </div>
+          {/* Кнопки количества - без границ и отступов */}
+          <Box
+  style={{
+    display: 'flex',
+    alignItems: 'center',
+    gap: 8,
+    // Важно: контейнер прозрачный — серый фон у самих кнопок
+    backgroundColor: 'transparent',
+    padding: 0,
+    borderRadius: 8,
+    flexShrink: 0,
+  }}
+>
+  {/* Minus button: серый квадрат, иконка строго по центру */}
+  <ActionIcon
+    onClick={handleDecrement}
+    disabled={quantity <= 1}
+    style={{
+      width: 36,
+      height: 36,
+      borderRadius: 8,
+      backgroundColor: '#F1F3F5',            // сама кнопка серая
+      border: '1px solid #DEE2E6',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: 0,                             // убираем внутренние отступы
+      cursor: quantity <= 1 ? 'not-allowed' : 'pointer',
+    }}
+  >
+    <IconMinus size={16} style={{ display: 'block', lineHeight: 0 }} />
+  </ActionIcon>
+
+  {/* Input */}
+  <NumberInput
+    value={quantity}
+    onChange={handleQuantityChange}
+    min={1}
+    max={99}
+    hideControls
+    styles={{
+      root: { width: 40, display: 'flex', alignItems: 'center', justifyContent: 'center' },
+      input: {
+        width: 36,
+        height: 36,
+        minHeight: 36,
+        textAlign: 'center',
+        padding: 0,
+        fontSize: 14,
+        fontWeight: 600,
+        border: 'none',
+        backgroundColor: 'transparent',
+        color: '#343A40',
+        outline: 'none',
+      },
+    }}
+  />
+
+  {/* Plus button: серый квадрат, иконка строго по центру */}
+  <ActionIcon
+    onClick={handleIncrement}
+    style={{
+      width: 36,
+      height: 36,
+      borderRadius: 8,
+      backgroundColor: '#F1F3F5',            // сама кнопка серая
+      border: '1px solid #DEE2E6',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: 0,
+      cursor: 'pointer',
+    }}
+  >
+    <IconPlus size={16} style={{ display: 'block', lineHeight: 0 }} />
+  </ActionIcon>
+</Box>
         </Box>
 
         {/* Вторая строка: цена и кнопка добавления */}
@@ -187,7 +200,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
             gap: 12,
             alignItems: 'center',
             margin: '0 auto',
-            marginTop: 'auto', // Прижимаем к низу
+            marginTop: 'auto',
           }}
         >
           {/* Цена */}
